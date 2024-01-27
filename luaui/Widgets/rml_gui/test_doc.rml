@@ -2,8 +2,21 @@
     <head>
         <link type="text/rcss" href="/LuaUI/rml/styles.rcss" />
         <link type="text/rcss" href="/LuaUI/rml/flow_ui.rcss" />
+        <link type="text/template" href="/LuaUI/rml/unitpic.template.rml" />
     </head>
-    <body class="element" style="top: 50%; left: 30%; width: 300px; height: 100px;">
+    <body class="element" style="top: 20%; left: 30%; min-width: 300px; min-height: 100px;">
         <div>stuff go here</div>
+<!--        <template src="unitpic" data-alias-unit="'legcom'">-->
+<!--            Stuff here as well?-->
+<!--        </template>-->
+        <div>Custom &lt;texture&gt; Element</div>
+        <div>src="^101"</div>
+        <texture src="^101"/>
+        <div>src="#101"</div>
+        <texture src="#101"/>
+        <div>src="luaui /images/backgroundtile.png"</div>
+        <div>src=":imr256,256,t1,0,1:luaui /images/backgroundtile.png"</div>
+        <texture src="luaui/images/backgroundtile.png"/>
+        <texture src=":imr256,256,t1,0,1:luaui/images/backgroundtile.png"/>
     </body>
 </rml>

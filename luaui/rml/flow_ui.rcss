@@ -1,5 +1,5 @@
 .element {
-    padding: 1px;
+    padding: 4px;
     border-radius: 8px;
     border: 4px black;
     background-color: rgba(0%, 0%, 0%, 70%);
