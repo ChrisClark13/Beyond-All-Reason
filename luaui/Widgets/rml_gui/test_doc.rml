@@ -11,12 +11,12 @@
 <!--        </template>-->
         <div>Custom &lt;texture&gt; Element</div>
         <div>src="^101"</div>
-        <texture src="^101"/>
+        <lua-texture src="^101"/>
         <div>src="#101"</div>
-        <texture src="#101"/>
+        <lua-texture src="#101"/>
         <div>src="luaui /images/backgroundtile.png"</div>
         <div>src=":imr256,256,t1,0,1:luaui /images/backgroundtile.png"</div>
-        <texture src="luaui/images/backgroundtile.png"/>
-        <texture src=":imr256,256,t1,0,1:luaui/images/backgroundtile.png"/>
+        <lua-texture src="luaui/images/backgroundtile.png"/>
+        <lua-texture src=":imr256,256,t1,0,1:luaui/images/backgroundtile.png"/>
     </body>
 </rml>
