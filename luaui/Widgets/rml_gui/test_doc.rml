@@ -4,19 +4,24 @@
         <link type="text/rcss" href="/LuaUI/rml/flow_ui.rcss" />
         <link type="text/template" href="/LuaUI/rml/unitpic.template.rml" />
     </head>
-    <body class="element" style="top: 20%; left: 30%; min-width: 300px; min-height: 100px;">
+    <body
+        class="element"
+        data-model="render_hook_test"
+        style="top: 20%; left: 30%; min-width: 300px; min-height: 100px;"
+    >
         <div>stuff go here</div>
 <!--        <template src="unitpic" data-alias-unit="'legcom'">-->
 <!--            Stuff here as well?-->
 <!--        </template>-->
-        <div>Custom &lt;texture&gt; Element</div>
-        <div>src="^101"</div>
-        <lua-texture src="^101"/>
-        <div>src="#101"</div>
-        <lua-texture src="#101"/>
-        <div>src="luaui /images/backgroundtile.png"</div>
-        <div>src=":imr256,256,t1,0,1:luaui /images/backgroundtile.png"</div>
-        <lua-texture src="luaui/images/backgroundtile.png"/>
-        <lua-texture src=":imr256,256,t1,0,1:luaui/images/backgroundtile.png"/>
+<!--        <div>Custom &lt;texture&gt; Element</div>-->
+<!--        <div>src="^101"</div>-->
+<!--        <lua-texture src="^101"/>-->
+<!--        <div class="element" data-event-mousedown="renderHook('aaaaa')">src="#101" {{renderWidth}}</div>-->
+<!--        <lua-texture src="#101"/>-->
+<!--        <div>src="luaui /images/backgroundtile.png"</div>-->
+<!--        <div>src=":imr256,256,t1,0,1:luaui /images/backgroundtile.png"</div>-->
+<!--        <lua-texture src="luaui/images/backgroundtile.png"/>-->
+<!--        <lua-texture src=":imr256,256,t1,0,1:luaui/images/backgroundtile.png"/>-->
+        <div style="decorator: lua-render(RmlRenderCallback)"/>
     </body>
 </rml>
