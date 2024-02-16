@@ -42,7 +42,9 @@ function widget:Initialize()
 	document:Show()
 end
 
-function widget:RmlRenderCallback(element)
+function widget:RmlRenderCallback(element, screenTransformMatrix)
+	--Spring.Debug.TableEcho(getmetatable(element))
+	Spring.Echo(element.absolute_top)
 	gl.Translate(0.5,0.5, 1)
 	gl.Color(0.25,0.5,0,1)
 	gl.Rect(0,0,0.1,0.1)

@@ -22,6 +22,8 @@
 <!--        <div>src=":imr256,256,t1,0,1:luaui /images/backgroundtile.png"</div>-->
 <!--        <lua-texture src="luaui/images/backgroundtile.png"/>-->
 <!--        <lua-texture src=":imr256,256,t1,0,1:luaui/images/backgroundtile.png"/>-->
-        <div style="decorator: lua-render(RmlRenderCallback)"/>
+        <div style="decorator: lua-render(RmlRenderCallback); min-width: 100px; min-height: 100px">
+            CONTENT
+        </div>
     </body>
 </rml>
