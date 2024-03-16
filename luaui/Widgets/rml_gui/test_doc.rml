@@ -9,20 +9,24 @@
         data-model="render_hook_test"
         style="top: 20%; left: 30%; min-width: 300px; min-height: 100px;"
     >
+        <div style="background-color: green; width: 250px; height: 50px">
+            Solid Color Block test
+        </div>
+
         <div>stuff go here</div>
 <!--        <template src="unitpic" data-alias-unit="'legcom'">-->
 <!--            Stuff here as well?-->
 <!--        </template>-->
-<!--        <div>Custom &lt;texture&gt; Element</div>-->
-<!--        <div>src="^101"</div>-->
-<!--        <lua-texture src="^101"/>-->
-<!--        <div class="element" data-event-mousedown="renderHook('aaaaa')">src="#101" {{renderWidth}}</div>-->
-<!--        <lua-texture src="#101"/>-->
-<!--        <div>src="luaui /images/backgroundtile.png"</div>-->
-<!--        <div>src=":imr256,256,t1,0,1:luaui /images/backgroundtile.png"</div>-->
-<!--        <lua-texture src="luaui/images/backgroundtile.png"/>-->
-<!--        <lua-texture src=":imr256,256,t1,0,1:luaui/images/backgroundtile.png"/>-->
-        <div style="decorator: lua-render(RmlRenderCallback); min-width: 100px; min-height: 100px">
+        <div>Custom &lt;texture&gt; Element</div>
+        <div>src="^101"</div>
+        <lua-texture src="^101"/>
+        <div class="element" data-event-mousedown="exampleEventHook('aaaaa')">src="#101" {{exampleValue}}</div>
+        <lua-texture src="#101"/>
+        <div>src="luaui/images/backgroundtile.png"</div>
+        <div>src=":imr256,256,t1,0,1:luaui/images/backgroundtile.png"</div>
+        <lua-texture src="luaui/images/backgroundtile.png"/>
+        <lua-texture src=":imr256,256,t1,0,1:luaui/images/backgroundtile.png"/>
+        <div style="decorator: lua-render(YourRmlRenderCallbackNameHere); width: 100%; min-height: 200px">
             CONTENT
         </div>
     </body>

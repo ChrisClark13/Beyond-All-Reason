@@ -18,7 +18,7 @@ end
 local document
 widget.rmlContext = nil
 
-local render_cb = function(ev, ...) Spring.Echo('orig function says', ...) end;
+local eventCallback = function(ev, ...) Spring.Echo('orig function says', ...) end;
 
 local dm_handle
 
@@ -26,15 +26,14 @@ function widget:Initialize()
 	widget.rmlContext = rmlui.CreateContext(widget.whInfo.name)
 
 	local backing_table = {
-		renderWidth = 512,
-		renderHeight = 512,
-		renderHook = function(...) render_cb(...) end
+		exampleValue = 'asdfasdf',
+		exampleEventHook = function(...) eventCallback(...) end
 	};
 
 	dm_handle = widget.rmlContext:OpenDataModel("render_hook_test", backing_table);
 
-	render_cb = function (ev, ...)
-		Spring.Echo(ev.parameters.mouse_x, ev.parameters.mouse_y, ev.parameters.button)
+	eventCallback = function (ev, ...)
+		Spring.Echo(ev.parameters.mouse_x, ev.parameters.mouse_y, ev.parameters.button, ...)
 	end
 
 	document = widget.rmlContext:LoadDocument(widget.whInfo.path .. "test_doc.rml", widget)
@@ -42,8 +41,8 @@ function widget:Initialize()
 	document:Show()
 end
 
-function widget:RmlRenderCallback(element, screenTransformMatrix)
-	Spring.Debug.TableEcho(getmetatable(element))
+function widget:YourRmlRenderCallbackNameHere(...)
+	Spring.Echo(...)
 	gl.Translate(0.5,0.5, 1)
 	gl.Color(0.25,0.5,0,1)
 	gl.Rect(0,0,0.1,0.1)
