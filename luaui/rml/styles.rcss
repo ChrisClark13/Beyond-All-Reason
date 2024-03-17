@@ -89,3 +89,11 @@ colgroup {
 thead, tbody, tfoot {
     display: table-row-group;
 }
+
+handle[size_target] {
+    cursor: nwse-resize;
+}
+
+handle[move_target] {
+    cursor: move;
+}

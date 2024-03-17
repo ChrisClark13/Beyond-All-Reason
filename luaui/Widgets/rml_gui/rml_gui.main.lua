@@ -1,13 +1,13 @@
-if not rmlui then
+if not RmlUi then
 	return false
 end
 
 function widget:GetInfo()
 	return {
-		name      = "RML Gui (Alpha)",
+		name      = "Demo RML Gui",
 		desc      = "A sandbox for the Rml powered GUI.",
 		author    = "ChrisFloofyKitsune",
-		date      = "2024-01-26",
+		date      = "2024-03-17",
 		license   = "https://unlicense.org/",
 		layer     = -828888,
 		handler   = true,
@@ -23,17 +23,19 @@ local eventCallback = function(ev, ...) Spring.Echo('orig function says', ...) e
 local dm_handle
 
 function widget:Initialize()
-	widget.rmlContext = rmlui.CreateContext(widget.whInfo.name)
+	widget.rmlContext = RmlUi.CreateContext(widget.whInfo.name)
 
 	local backing_table = {
-		exampleValue = 'asdfasdf',
+		exampleValue = 'Changes when clicked',
 		exampleEventHook = function(...) eventCallback(...) end
 	};
 
-	dm_handle = widget.rmlContext:OpenDataModel("render_hook_test", backing_table);
+	dm_handle = widget.rmlContext:OpenDataModel("data_model_test", backing_table);
 
 	eventCallback = function (ev, ...)
 		Spring.Echo(ev.parameters.mouse_x, ev.parameters.mouse_y, ev.parameters.button, ...)
+		options = {"ow", "oof!", "stop that!", "clicking go brrrr"}
+		dm_handle.exampleValue = options[math.random(1, 4)]
 	end
 
 	document = widget.rmlContext:LoadDocument(widget.whInfo.path .. "test_doc.rml", widget)
@@ -41,20 +43,11 @@ function widget:Initialize()
 	document:Show()
 end
 
-function widget:YourRmlRenderCallbackNameHere(...)
-	Spring.Echo(...)
-	gl.Translate(0.5,0.5, 1)
-	gl.Color(0.25,0.5,0,1)
-	gl.Rect(0,0,0.1,0.1)
-	gl.Color(0.5,0,0,1)
-	gl.Rect(0,0,-0.1,-0.1)
-end
-
 function widget:Shutdown()
 	if document then
 		document:Close()
 	end
 	if widget.rmlContext then
-		rmlui.RemoveContext(widget.whInfo.name)
+		RmlUi.RemoveContext(widget.whInfo.name)
 	end
 end

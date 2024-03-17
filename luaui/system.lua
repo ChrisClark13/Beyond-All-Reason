@@ -71,7 +71,7 @@ if (System == nil) then
 		-- Custom libraries
 
 		Json = Json,
-		rmlui = rmlui,
+		RmlUi = RmlUi,
 
 		-- luasocket
 		socket          = socket,

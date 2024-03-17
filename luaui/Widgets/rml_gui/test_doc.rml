@@ -1,33 +1,43 @@
 <rml>
     <head>
-        <link type="text/rcss" href="/LuaUI/rml/styles.rcss" />
-        <link type="text/rcss" href="/LuaUI/rml/flow_ui.rcss" />
-        <link type="text/template" href="/LuaUI/rml/unitpic.template.rml" />
+        <link type="text/rcss" href="/LuaUI/rml/styles.rcss"/>
+        <link type="text/rcss" href="/LuaUI/rml/flow_ui.rcss"/>
     </head>
     <body
-        class="element"
-        data-model="render_hook_test"
-        style="top: 20%; left: 30%; min-width: 300px; min-height: 100px;"
+            data-model="data_model_test"
+            style="top: 10%; left: 20%; min-width: 300px; height: 70%;"
     >
-        <div style="background-color: green; width: 250px; height: 50px">
-            Solid Color Block test
+        <handle move_target="#document">
+            <div class="element">
+                <h3 style="margin: 0.25em">Window Top Bar (Click and Drag to Move)</h3>
+            </div>
+        </handle>
+        <div class="element">
+            <span>Below me is a flexbox</span>
+            <div style="display: flex">
+                <div style="background-color: green; width: 250px; height: 50px">
+                    Solid Color Block test
+                </div>
+                <div
+                        class="element"
+                        data-event-mousedown="exampleEventHook('event param example')"
+                        style="cursor: pointer"
+                >
+                    Click me for log spam<br/>
+                    Inserted value: {{exampleValue}}
+                </div>
+            </div>
         </div>
-
-        <div>stuff go here</div>
-<!--        <template src="unitpic" data-alias-unit="'legcom'">-->
-<!--            Stuff here as well?-->
-<!--        </template>-->
-        <div>Custom &lt;texture&gt; Element</div>
-        <div>src="^101"</div>
-        <lua-texture src="^101"/>
-        <div class="element" data-event-mousedown="exampleEventHook('aaaaa')">src="#101" {{exampleValue}}</div>
-        <lua-texture src="#101"/>
-        <div>src="luaui/images/backgroundtile.png"</div>
-        <div>src=":imr256,256,t1,0,1:luaui/images/backgroundtile.png"</div>
-        <lua-texture src="luaui/images/backgroundtile.png"/>
-        <lua-texture src=":imr256,256,t1,0,1:luaui/images/backgroundtile.png"/>
-        <div style="decorator: lua-render(YourRmlRenderCallbackNameHere); width: 100%; min-height: 200px">
-            CONTENT
+        <div class="element">
+            <h4 class="element" style="margin: 0.1em">Custom &lt;texture&gt; Element Demo</h4>
+            <div>&lt;texture src="^101"&gt;</div>
+            <texture src="^101"/>
+            <div>&lt;texture src="#101"&gt;</div>
+            <texture src="#101"/>
+            <div>&lt;texture src="luaui/images/backgroundtile.png"&gt;</div>
+            <texture src="luaui/images/backgroundtile.png"/>
+            <div>&lt;texture src=":imr256,256,t1,0,1:luaui/images/backgroundtile.png"&gt;</div>
+            <texture src=":imr256,256,t1,0,1:luaui/images/backgroundtile.png"/>
         </div>
     </body>
 </rml>
