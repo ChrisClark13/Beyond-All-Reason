@@ -72,8 +72,8 @@ vertex = [[
 	#define OPTION_VERTEX_AO 3
 	#define OPTION_FLASHLIGHTS 4
 
-	#define OPTION_THREADS_ARM 5
-	#define OPTION_THREADS_CORE 6
+	#define OPTION_TREADS_ARM 5
+	#define OPTION_TREADS_CORE 6
 
 	#define OPTION_HEALTH_TEXTURING 7
 	#define OPTION_HEALTH_DISPLACE 8
@@ -466,8 +466,8 @@ vertex = [[
 		#if (RENDERING_MODE != 2) //non-shadow pass
 
 			%%VERTEX_UV_TRANSFORM%%
-			#ifdef ENABLE_OPTION_THREADS
-			if (BITMASK_FIELD(bitOptions, OPTION_THREADS_ARM)) {
+			#ifdef ENABLE_OPTION_TREADS
+			if (BITMASK_FIELD(bitOptions, OPTION_TREADS_ARM)) {
 				const float atlasSize = 4096.0;
 				const float gfMod = 8.0;
 				const float texSpeed = 4.0;
@@ -483,7 +483,7 @@ vertex = [[
 				}
 			}
 
-			if (BITMASK_FIELD(bitOptions, OPTION_THREADS_CORE)) {
+			if (BITMASK_FIELD(bitOptions, OPTION_TREADS_CORE)) {
 				const float atlasSize = 2048.0;
 				const float gfMod = 6.0;
 				const float texSpeed = -6.0;
@@ -615,8 +615,8 @@ fragment = [[
 	#define OPTION_VERTEX_AO 3
 	#define OPTION_FLASHLIGHTS 4
 
-	#define OPTION_THREADS_ARM 5
-	#define OPTION_THREADS_CORE 6
+	#define OPTION_TREADS_ARM 5
+	#define OPTION_TREADS_CORE 6
 
 	#define OPTION_HEALTH_TEXTURING 7
 	#define OPTION_HEALTH_DISPLACE 8
@@ -1890,8 +1890,8 @@ local defaultMaterialTemplate = {
 		flashlights       = false,
 		shift_rgbhsv    = false,
 
-		threads_arm       = false,
-		threads_core      = false,
+		treads_arm = false,
+		treads_core = false,
 
 		health_displace  = false,
 		health_texturing = false,
@@ -1913,8 +1913,8 @@ local defaultMaterialTemplate = {
 		flashlights      = false,
 		shift_rgbhsv   = false,
 
-		threads_arm      = false,
-		threads_core     = false,
+		treads_arm = false,
+		treads_core = false,
 
 		modelsfog        = true,
 
