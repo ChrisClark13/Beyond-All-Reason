@@ -466,49 +466,9 @@ vertex = [[
 		#if (RENDERING_MODE != 2) //non-shadow pass
 
 			%%VERTEX_UV_TRANSFORM%%
+
 			#ifdef ENABLE_OPTION_TREADS
-			if (BITMASK_FIELD(bitOptions, OPTION_TREADS_ARM)) {
-				const float atlasSize = 4096.0;
-				const float gfMod = 8.0;
-				const float texSpeed = 4.0;
-				float unitSpeed = uni[instData.y].speed.w;
-				float texOffset = unitSpeed * mod(float(simFrame), gfMod) * (texSpeed / atlasSize);
-
-				// note, invert we invert Y axis
-				const vec4 treadBoundaries = vec4(2572.0, 3070.0, atlasSize - 1761.0, atlasSize - 1548.0) / atlasSize;
-				if (all(bvec4(
-						uvCoords.x >= treadBoundaries.x, uvCoords.x <= treadBoundaries.y,
-						uvCoords.y >= treadBoundaries.z, uvCoords.y <= treadBoundaries.w))) {
-					uvCoords.x += texOffset;
-				}
-			}
-
-			if (BITMASK_FIELD(bitOptions, OPTION_TREADS_CORE)) {
-				const float atlasSize = 2048.0;
-				const float gfMod = 6.0;
-				const float texSpeed = -6.0;
-				float unitSpeed = uni[instData.y].speed.w;
-				float baseOffset =  unitSpeed * mod(float(simFrame), gfMod) / atlasSize;
-				float texOffset = baseOffset * texSpeed;
-
-				// note, invert we invert Y axis
-				const vec4 treadBoundaries = vec4(1536.0, 2048.0, atlasSize - 2048.0, atlasSize - 1792.0) / atlasSize;
-				if (all(bvec4(
-						uvCoords.x >= treadBoundaries.x, uvCoords.x <= treadBoundaries.y,
-						uvCoords.y >= treadBoundaries.z, uvCoords.y <= treadBoundaries.w))) {
-					uvCoords.x += texOffset;
-				}
-
-				const float texSpeed2 = 3.0;
-				const vec4 treadBoundaries2 = vec4(93.0, 349.0, atlasSize - 400.0, atlasSize - 316.0) / atlasSize;
-				texOffset = baseOffset * texSpeed2;
-
-				if (all(bvec4(
-						uvCoords.x >= treadBoundaries2.x, uvCoords.x <= treadBoundaries2.y,
-						uvCoords.y >= treadBoundaries2.z, uvCoords.y <= treadBoundaries2.w))) {
-					uvCoords.x += texOffset;
-				}
-			}
+			%%VERTEX_UV_TREADS%%
 			#endif
 
 			worldVertexPos = worldPos;
@@ -1801,6 +1761,59 @@ fragment = [[
 	},
 }
 
+
+--// NOTES
+--// Arm small (top) width 12px
+--// Arm big (bot) width 20px
+--// Cor small (top) width 24px
+--// Cor small (bot) width 28px
+--// Cor big (right bot) width 56px
+
+local vertexTreadsOld = [[
+			if (BITMASK_FIELD(bitOptions, OPTION_TREADS_ARM)) {
+				const float atlasSize = 4096.0;
+				const float gfMod = 8.0;
+				const float texSpeed = 4.0;
+				float unitSpeed = uni[instData.y].speed.w;
+				float texOffset = unitSpeed * mod(float(simFrame), gfMod) * (texSpeed / atlasSize);
+
+				// note, invert we invert Y axis
+				const vec4 treadBoundaries = vec4(2572.0, 3070.0, atlasSize - 1761.0, atlasSize - 1548.0) / atlasSize;
+				if (all(bvec4(
+						uvCoords.x >= treadBoundaries.x, uvCoords.x <= treadBoundaries.y,
+						uvCoords.y >= treadBoundaries.z, uvCoords.y <= treadBoundaries.w))) {
+					uvCoords.x += texOffset;
+				}
+			}
+
+			if (BITMASK_FIELD(bitOptions, OPTION_TREADS_CORE)) {
+				const float atlasSize = 2048.0;
+				const float gfMod = 6.0;
+				const float texSpeed = -6.0;
+				float unitSpeed = uni[instData.y].speed.w;
+				float baseOffset =  unitSpeed * mod(float(simFrame), gfMod) / atlasSize;
+				float texOffset = baseOffset * texSpeed;
+
+				// note, invert we invert Y axis
+				const vec4 treadBoundaries = vec4(1536.0, 2048.0, atlasSize - 2048.0, atlasSize - 1792.0) / atlasSize;
+				if (all(bvec4(
+						uvCoords.x >= treadBoundaries.x, uvCoords.x <= treadBoundaries.y,
+						uvCoords.y >= treadBoundaries.z, uvCoords.y <= treadBoundaries.w))) {
+					uvCoords.x += texOffset;
+				}
+
+				const float texSpeed2 = 3.0;
+				const vec4 treadBoundaries2 = vec4(93.0, 349.0, atlasSize - 400.0, atlasSize - 316.0) / atlasSize;
+				texOffset = baseOffset * texSpeed2;
+
+				if (all(bvec4(
+						uvCoords.x >= treadBoundaries2.x, uvCoords.x <= treadBoundaries2.y,
+						uvCoords.y >= treadBoundaries2.z, uvCoords.y <= treadBoundaries2.w))) {
+					uvCoords.x += texOffset;
+				}
+			}
+]]
+
 local SKIN_SUPPORT = Script.IsEngineMinVersion(105, 0, 1653) and "1" or "0"
 local defaultMaterialTemplate = {
 	--standardUniforms --locs, set by api_cus
@@ -1951,10 +1964,10 @@ local defaultMaterialTemplate = {
 	--culling = GL.BACK, -- usually GL.BACK is default, except for 3do
 	-- shadowCulling = GL.BACK,
 	-- usecamera = false, -- usecamera ? {gl_ModelViewMatrix, gl_NormalMatrix} = {modelViewMatrix, modelViewNormalMatrix} : {modelMatrix, modelNormalMatrix}
-}
 
-local shaderPlugins = {
-	-- Inserted between %%TARGET%% blocks via InsertPlugin
+	shaderPlugins = {
+		VERTEX_UV_TREADS = vertexTreadsOld,
+	}
 }
 
 
