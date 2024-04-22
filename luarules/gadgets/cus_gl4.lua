@@ -433,7 +433,7 @@ local function GetShader(drawPass, objectDefID)
 		return false
 	end
 	if objectDefID >= 0 then
-		if unitDefsUseSkinning[objectDefID] then 
+		if unitDefsUseSkinning[objectDefID] then
 			return shaders[drawPass]['unitskinning']
 		else
 			return shaders[drawPass]['unit']
@@ -447,13 +447,13 @@ local function GetShader(drawPass, objectDefID)
 	end
 end
 
-local function GetShaderName(drawPass, objectDefID) 
-	-- this function does 2 table lookups, could get away with just one. 
+local function GetShaderName(drawPass, objectDefID)
+	-- this function does 2 table lookups, could get away with just one.
 	if objectDefID == nil then
 		return false
 	end
 	if objectDefID >= 0 then
-		if unitDefsUseSkinning[objectDefID] then 
+		if unitDefsUseSkinning[objectDefID] then
 			return 'unitskinning'
 		else
 			return 'unit'
@@ -713,8 +713,8 @@ local function CompileLuaShader(shader, definitions, plugIns, addName)
 	local compilationResult = luaShader:Initialize()
 	if compilationResult ~= true then
 		Spring.Echo("Custom Unit Shaders. " .. addName .. " shader compilation failed")
-		dumpShaderCodeToInfolog(shader.definitions, shader.vertex, "vs" .. addName)
-		dumpShaderCodeToInfolog(shader.definitions, shader.fragment, "fs" .. addName)
+		--dumpShaderCodeToInfolog(shader.definitions, shader.vertex, "vs" .. addName)
+		--dumpShaderCodeToInfolog(shader.definitions, shader.fragment, "fs" .. addName)
 		gadgetHandler:RemoveGadget()
 		return nil
 	end
@@ -723,11 +723,17 @@ local function CompileLuaShader(shader, definitions, plugIns, addName)
 end
 
 local function compileMaterialShader(template, name)
+
+	local plugins = template.shaderPlugins
+	if type(GG['CUS_PLUGINS']) == 'table' then
+		plugins = table.merge(plugins, GG['CUS_PLUGINS'])
+	end
+
 	--Spring.Echo("Compiling", template, name)
-	local forwardShader = CompileLuaShader(template.shader, template.shaderDefinitions, template.shaderPlugins, name .."_forward" )
-	local shadowShader = CompileLuaShader(template.shadow, template.shadowDefinitions, template.shaderPlugins, name .."_shadow" )
-	local deferredShader = CompileLuaShader(template.deferred, template.deferredDefinitions, template.shaderPlugins, name .."_deferred" )
-	local reflectionShader = CompileLuaShader(template.reflection, template.reflectionDefinitions, template.shaderPlugins, name .."_reflection" )
+	local forwardShader = CompileLuaShader(template.shader, template.shaderDefinitions, plugins, name .."_forward" )
+	local shadowShader = CompileLuaShader(template.shadow, template.shadowDefinitions, plugins, name .."_shadow" )
+	local deferredShader = CompileLuaShader(template.deferred, template.deferredDefinitions, plugins, name .."_deferred" )
+	local reflectionShader = CompileLuaShader(template.reflection, template.reflectionDefinitions, plugins, name .."_reflection" )
 
 	for k = 1, #drawBinKeys do
 		local flag = drawBinKeys[k]
@@ -799,7 +805,7 @@ local wreckAtlases = {
 		"unittextures/Arm_wreck_other.dds",
 		"unittextures/Arm_wreck_color_normal.dds",
 	},
-	["cor"] = { 
+	["cor"] = {
 		"unittextures/cor_color_wreck.dds",
 		"unittextures/cor_other_wreck.dds",
 		"unittextures/cor_color_wreck_normal.dds",
@@ -828,10 +834,10 @@ local function GetNormal(unitDef, featureDef)
 		if existingfilecache[tex2] == nil and FileExists(tex2) then
 			existingfilecache[tex2] = string.format("%%%i:1", unitDef.id)
 		end
-		
+
 		if unitDef.customParams and unitDef.customParams.normaltex then
 			local normaltex = unitDef.customParams.normaltex
-			if existingfilecache[normaltex] == nil and FileExists(normaltex) then 
+			if existingfilecache[normaltex] == nil and FileExists(normaltex) then
 				existingfilecache[normaltex] = normaltex
 			end
 			return normaltex
@@ -841,30 +847,30 @@ local function GetNormal(unitDef, featureDef)
 	if featureDef then
 		local tex1 = unittextures .. (featureDef.model.textures.tex1 or "DOESNTEXIST.PNG")
 		local tex2 = unittextures .. (featureDef.model.textures.tex2 or "DOESNTEXIST.PNG")
-		
+
 		-- cache them:
-		if existingfilecache[tex1] == nil and FileExists(tex1) then 
+		if existingfilecache[tex1] == nil and FileExists(tex1) then
 			existingfilecache[tex1] = string.format("%%%i:0", -1*featureDef.id)
 		end
-		if existingfilecache[tex2] == nil and FileExists(tex2) then 
+		if existingfilecache[tex2] == nil and FileExists(tex2) then
 			existingfilecache[tex2] = string.format("%%%i:1", -1*featureDef.id)
 		end
 
 		if featureDef.customParams and featureDef.customParams.normaltex then
 			local normaltex = featureDef.customParams.normaltex
-			if existingfilecache[normaltex] == nil and FileExists(normaltex) then	
+			if existingfilecache[normaltex] == nil and FileExists(normaltex) then
 				existingfilecache[normaltex] = normaltex
 			end
 			return normaltex
 		else
-			if featureDef.model.textures.tex1 == "Arm_wreck_color.dds" then 
+			if featureDef.model.textures.tex1 == "Arm_wreck_color.dds" then
 				return unittextures.."Arm_wreck_color_normal.dds"
 			end
-			
-			if featureDef.model.textures.tex1 == "cor_color_wreck.dds" then 
+
+			if featureDef.model.textures.tex1 == "cor_color_wreck.dds" then
 				return unittextures.."cor_color_wreck_normal.dds"
 			end
-			-- try to search for an appropriate normal 
+			-- try to search for an appropriate normal
 			normalMap = tex1:gsub("%.","_normals.")
 			-- Spring.Echo(normalMap)
 			if (existingfilecache[normalMap] or FileExists(normalMap)) then
@@ -883,17 +889,17 @@ local function GetNormal(unitDef, featureDef)
 end
 -- BIG TODO:
 -- Replace lua texture names with overrides of WreckTex et al!
--- 
+--
 -- %34:1 = unitDef 34 s3o tex2 (:0->tex1,:1->tex2)
--- %-102:0 = featureDef 102 s3o tex1 
+-- %-102:0 = featureDef 102 s3o tex1
 -- The problem here being hat tex1 and tex2 dont participate in texture key hashing.
--- so e.g. raptors may have been drawn with incorrect textures all along, due to them being keyed 
+-- so e.g. raptors may have been drawn with incorrect textures all along, due to them being keyed
 
 
 
 local knowntrees = VFS.Include("modelmaterials_gl4/known_feature_trees.lua")
 local function initBinsAndTextures()
-	
+
 	-- init features first, to gain access to stored wreck textures!
 	Spring.Echo("[CUS GL4] Init Feature bins")
 	for featureDefID, featureDef in pairs(FeatureDefs) do
@@ -975,7 +981,7 @@ local function initBinsAndTextures()
 			local lowercasetex2 = string.lower(unitDef.model.textures.tex2 or "")
 			local lowercasenormaltex = string.lower(normalTex or "")
 
-			
+
 			local wreckTex1 = (lowercasetex1:find("arm_color", nil, true) and "unittextures/Arm_wreck_color.dds") or
 								(lowercasetex1:find("cor_color", nil, true) and "unittextures/cor_color_wreck.dds")  or false
 			if wreckTex1 and existingfilecache[wreckTex1] then -- this part is what ensures that these textures dont get loaded separately, but instead use ones provided by featuredefs
@@ -1007,12 +1013,12 @@ local function initBinsAndTextures()
 				textureTable[4] = wreckTex2
 				textureTable[5] = wreckNormalTex
 			end
-			
-			if unitDef.customParams and unitDef.customParams.useskinning then 
+
+			if unitDef.customParams and unitDef.customParams.useskinning then
 				unitDefsUseSkinning[unitDefID] = true
 				objectDefToUniformBin[unitDefID]  = 'otherunit' -- This will temporarily disable raptor shader
 			end
-			
+
 			local texKeyFast = GenFastTextureKey(unitDefID, unitDef, normalTex, textureTable)
 			if textureKeytoSet[texKeyFast] == nil then
 				textureKeytoSet[texKeyFast] = textureTable
@@ -1607,7 +1613,7 @@ local function ExecuteDrawPass(drawPass)
 
 							SetFixedStatePost(drawPass, shaderTable)
 							unbindtextures = true
-				
+
 						end
 					end
 				end
@@ -1616,8 +1622,8 @@ local function ExecuteDrawPass(drawPass)
 			end
 		end
 	end
-	
-	if unbindtextures then 
+
+	if unbindtextures then
 		for i=0,10 do
 			gl.Texture(i, false)
 		end
@@ -1857,12 +1863,12 @@ local function FreeTextures() -- pre we are using 2200mb
 	-- free all pilha texes
 	Spring.Echo("Freeing textures")
 	--delete raptor texes if no raptors are present
-	for unitDefID, uniformBin in pairs(objectDefToUniformBin) do 
-		if uniformBin == 'raptor' then 
+	for unitDefID, uniformBin in pairs(objectDefToUniformBin) do
+		if uniformBin == 'raptor' then
 			local textureTable = textureKeytoSet[fastObjectDefIDtoTextureKey[unitDefID]]
 			local s1 = gl.DeleteTexture(textureTable[0])
 			local s2 = gl.DeleteTexture(textureTable[1])
-			
+
 			Spring.Echo("Freeing ",textureTable[0],textureTable[1], s1, s2)
 		end
 	end
@@ -1871,33 +1877,33 @@ local function FreeTextures() -- pre we are using 2200mb
 	local features = Spring.GetAllFeatures()
 
 	local delFeatureDefs = {}
-	for featureDefID, featureDef in pairs(FeatureDefs) do delFeatureDefs[featureDefID] = true end 
+	for featureDefID, featureDef in pairs(FeatureDefs) do delFeatureDefs[featureDefID] = true end
 
-	for i, featureID in ipairs(features) do 
+	for i, featureID in ipairs(features) do
 		local existingFeatureDefID = Spring.GetFeatureDefID(featureID)
 		delFeatureDefs[existingFeatureDefID] = false
 	end
 
-	for featureDefID, deleteme in pairs(delFeatureDefs) do 
+	for featureDefID, deleteme in pairs(delFeatureDefs) do
 		local textureTable = textureKeytoSet[fastObjectDefIDtoTextureKey[-featureDefID]]
 			local s1 = gl.DeleteTexture(textureTable[0])
 			local s2 = gl.DeleteTexture(textureTable[1])
-			
+
 			Spring.Echo("Freeing ",textureTable[0],textureTable[1], s1, s2)
 	end
-	
+
 	Spring.Echo("RawDelete")
 	local unittexfiles = VFS.DirList("unittextures/")
-	for i, fname in ipairs(unittexfiles) do 
-		if string.find(fname,'chicken', nil, true) then 
+	for i, fname in ipairs(unittexfiles) do
+		if string.find(fname,'chicken', nil, true) then
 			local s1 = gl.DeleteTexture(fname)
 			Spring.Echo("Freeing ",fname, s1)
 
 		end
-		
+
 	end
-	
-	
+
+
 end
 
 
@@ -1912,7 +1918,7 @@ function gadget:Initialize()
 	if not initiated and tonumber(Spring.GetConfigInt("cus2", 1) or 1) == 1 then
 		initGL4()
 	end
-	
+
 	GG.CUSGL4 = {}
 	GG.CUSGL4.unitsInViewport = unitsInViewport
 	GG.CUSGL4.featuresInViewport = featuresInViewport
@@ -1925,7 +1931,7 @@ function gadget:Initialize()
 	GG.CUSGL4.GetShader = GetShader
 	GG.CUSGL4.GetShaderName = GetShaderName
 	GG.CUSGL4.SetShaderUniforms = SetShaderUniforms
-	
+
 end
 
 function gadget:Shutdown()
@@ -1953,11 +1959,13 @@ function gadget:Shutdown()
 	--gadgetHandler:RemoveChatAction("disablecusgl4")
 	--gadgetHandler:RemoveChatAction("reloadcusgl4")
 	--gadgetHandler:RemoveChatAction("cusgl4updaterate")
-	for k,v in pairs(GG.CUSGL4) do
-		GG.CUSGL4[k] = nil
+	if GG.CUSGL4 then
+		for k,v in pairs(GG.CUSGL4) do
+			GG.CUSGL4[k] = nil
+		end
+
+		GG.CUSGL4 = nil
 	end
-	
-	GG.CUSGL4 = nil
 end
 
 

@@ -4,8 +4,8 @@ vertex = [[
 
 	layout (location = 0) in vec3 pos;
 	layout (location = 1) in vec3 normal;
-	layout (location = 2) in vec3 T;
-	layout (location = 3) in vec3 B;
+	layout (location = 2) in vec3 T; // tangent
+	layout (location = 3) in vec3 B; // bi-tangent
 	layout (location = 4) in vec4 uv;
 	#if (SKINSUPPORT == 0)
 		layout (location = 5) in uint pieceIndex;
@@ -20,7 +20,7 @@ vertex = [[
 		layout (location = 7) in vec4 offsetrot;
 		layout (location = 8) in uvec4 instData;
 	#endif
-		
+
 	// u32 matOffset
 	// u32 uniOffset
 	// u32 {teamIdx, drawFlag, unused, unused}
@@ -55,7 +55,6 @@ vertex = [[
 	// Unit Uniforms:
 	#define UNITUNIFORMS uni[instData.y]
 	#define UNITID (uni[instData.y].composite >> 16)
-	#define TREADOFFSET uni[instData.y].speed.w
 
 	%%GLOBAL_NAMESPACE%%
 
@@ -105,14 +104,8 @@ vertex = [[
 	vec3 cameraPos	 = cameraViewInv[3].xyz;
 	vec3 cameraDir = -1.0 * vec3(cameraView[0].z,cameraView[1].z,cameraView[2].z);
 
-
-	//[0]-healthMix, 0.0 for full health, ~0.8 for max damage
-	//[1]-healthMod, customparams.healthlookmod, 0.4 for scavengers
-	//[2]-vertDisplacement, for scavs, its min(10.0, 5.5 + (footprintx+footprintz) /12 )
-	//[3]-tracks speed = floor(4 * speed + 0.5) / 4
 	uniform float baseVertexDisplacement = 0.0; // this is for the scavengers,
 	const float vertexDisplacement = 6.0; // Strength of vertex displacement on health change
-	const float treadsvelocity = 0.5;
 #line 10200
 
 	uniform int bitOptions;
@@ -275,13 +268,13 @@ vertex = [[
 		mVP.xz += diff + diff2 * wind;
 		//mVP.y += float(UNITID/256);// + sin(simFrame *0.1)+15; // whoops this was meant as debug
 	}
-	
+
 	#ifdef USESKINNING
 		uint GetUnpackedValue(uint packedValue, uint byteNum) {
 			return (packedValue >> (8u * byteNum)) & 0xFFu;
 		}
 		// See: https://github.com/beyond-all-reason/spring/blob/d37412acca1ae14a602d0cf46243d0aedd132701/cont/base/springcontent/shaders/GLSL/ModelVertProgGL4.glsl#L135C1-L191C2
-		
+
 		// The only difference is that displacedPos is passed in, and we always assume staticModel = false
 		void GetModelSpaceVertex(in vec3 displacedPos, out vec4 msPosition, out vec3 msNormal)
 		{
@@ -359,12 +352,12 @@ vertex = [[
 					   0.0, c1, -s1, 0.0,
 					   0.0, s1, c1, 0.0,
 					   0.0, 0.0, 0.0, 1.0);
-					   
+
 		mat4 ry = mat4(c2, 0.0, s2, 0.0,
 					   0.0, 1.0, 0.0, 0.0,
 					   -s2, 0.0, c2, 0.0,
 					   0.0, 0.0, 0.0, 1.0);
-					   
+
 		mat4 rz = mat4(c3, -s3, 0.0, 0.0,
 					   s3, c3, 0.0, 0.0,
 					   0.0, 0.0, 1.0, 0.0,
@@ -373,7 +366,7 @@ vertex = [[
 		// Combined rotation matrix, order is important
 		return rz * ry * rx;
 	}
-	
+
 
 	/***********************************************************************/
 	// Vertex shader main()
@@ -387,21 +380,21 @@ vertex = [[
 		#ifndef STATICMODEL
 			// pieceMatrix looks up the model-space transform matrix for unit being drawn
 			mat4 pieceMatrix = mat[instData.x + pieceIndex + 1u];
-			
+
 			// Then it places it in the world
 			mat4 worldMatrix = mat[instData.x];
 		#else
 			// First lets orient the
-		
+
 			// pieceMatrix looks up the model-space transform matrix for the unit we are drawing onto!
 			uint targetPieceIndex = uint(offsetpos_targetpiece.w);
 			mat4 pieceMatrix = mat[instData.x + targetPieceIndex + 1u];
-			
+
 			// Then it places it in the world
 			mat4 worldMatrix = mat[instData.x];
-	
+
 		#endif
-			
+
 
 		mat4 worldPieceMatrix = worldMatrix * pieceMatrix; // for the below
 		mat3 normalMatrix = mat3(worldPieceMatrix);
@@ -1683,7 +1676,7 @@ fragment = [[
 		#endif
 
 		outColor.rgb *= brightnessFactor; // this is to correct for lack of env mapping, the nastiest hack there has ever been...
-		
+
 		//iblDiffuse, iblSpecular
 		//outColor.rgb = iblSpecular;
 
